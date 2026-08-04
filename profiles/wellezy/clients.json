@@ -12,6 +12,7 @@
     "data_start_row": 1,
     "ignore_empty_rows": true
   },
+  "timestamps": true,
   "destination": {
     "table_name": "clients",
     "engine": "mysql"

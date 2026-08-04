@@ -94,9 +94,18 @@ class Pipeline:
 
         if registros:
             print("Generando SQL...")
+            
+            db_columns = profile.db_columns()
+            if profile.profile.get("timestamps", False):
+                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                for registro in registros:
+                    registro["created_at"] = current_time
+                    registro["updated_at"] = current_time
+                db_columns.extend(["created_at", "updated_at"])
+
             sql = SQLBuilder.insert(
                 table=profile.table_name,
-                columns=profile.db_columns(),
+                columns=db_columns,
                 rows=registros
             )
 

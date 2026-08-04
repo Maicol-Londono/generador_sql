@@ -12,6 +12,7 @@
     "data_start_row": 1,
     "ignore_empty_rows": true
   },
+  "timestamps": true,
   "destination": {
     "table_name": "solicitudes",
     "engine": "mysql"
@@ -26,7 +27,7 @@
     "max_errors": 100
   },
   "integrity_policy": {
-    "on_lookup_errors": "abort"
+    "on_lookup_errors": "generate_sql"
   },
   "lookups": {
     "lookup_client_id": {

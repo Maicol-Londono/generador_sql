@@ -1,0 +1,5 @@
+{
+  "engine": "sqlite",
+  "dialect": "sqlite",
+  "defaults": {}
+}

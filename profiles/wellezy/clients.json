@@ -1,0 +1,169 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "profile_name": "wellezy_clients_import",
+    "description": "ImportaciÃ³n oficial de Clientes (BD Cartera) hacia Wellezy Hub 2",
+    "source_type": "excel"
+  },
+  "source": {
+    "type": "excel",
+    "sheet_name": "Clientes",
+    "header_row": 0,
+    "data_start_row": 1,
+    "ignore_empty_rows": true
+  },
+  "destination": {
+    "table_name": "clients",
+    "engine": "mysql"
+  },
+  "import_strategy": {
+    "mode": "insert"
+  },
+  "columns": [
+    {
+      "source_column": "Id",
+      "db_column": "id",
+      "type": "integer",
+      "nullable": false,
+      "skip": false
+    },
+    {
+      "source_column": "company_id",
+      "db_column": "company_id",
+      "type": "integer",
+      "nullable": true
+    },
+    {
+      "source_column": "linea_id",
+      "db_column": "linea_id",
+      "type": "integer",
+      "nullable": true
+    },
+    {
+      "source_column": "clinica_id",
+      "db_column": "clinica_id",
+      "type": "integer",
+      "nullable": true
+    },
+    {
+      "source_column": "name",
+      "db_column": "name",
+      "type": "string",
+      "length": 255,
+      "nullable": false,
+      "transformations": ["trim", "titlecase"]
+    },
+    {
+      "source_column": "slug",
+      "db_column": "slug",
+      "type": "string",
+      "length": 255,
+      "nullable": false,
+      "transformations": ["trim", "lowercase"]
+    },
+    {
+      "source_column": "email",
+      "db_column": "email",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim", "lowercase"],
+      "validators": ["is_valid_email"]
+    },
+    {
+      "source_column": "fecha_nacimiento",
+      "db_column": "fecha_nacimiento",
+      "type": "date",
+      "nullable": true,
+      "extraction": {
+        "date_format": ["YYYY-MM-DD", "YYYY-MM-DD HH:mm:ss", "DD/MM/YYYY"]
+      }
+    },
+    {
+      "source_column": "document_type",
+      "db_column": "document_type",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim", "uppercase"]
+    },
+    {
+      "source_column": "document_number",
+      "db_column": "document_number",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim", "remove_symbols"]
+    },
+    {
+      "source_column": "phone",
+      "db_column": "phone",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "home_phone",
+      "db_column": "home_phone",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "address",
+      "db_column": "address",
+      "type": "text",
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "client_type",
+      "db_column": "client_type",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"],
+      "value_map": { "natual": "Natural", 
+        "natural": "Natural",
+        "persona natural": "Natural",
+        "jurÃ­dica": "Juridico",
+        "juridica": "Juridico",
+        "persona juridica": "Juridico",
+        "persona jurÃ­dica": "Juridico"
+      },
+      "valid_values": ["Natural", "Juridico"]
+    },
+    {
+      "source_column": "nationality",
+      "db_column": "nationality",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim", "titlecase"]
+    },
+    {
+      "db_column": "portal_enabled",
+      "type": "static_value",
+      "value": 0,
+      "description": "El cliente no tiene acceso al portal por defecto al ser importado"
+    },
+    {
+      "db_column": "automatic_communications_enabled",
+      "type": "static_value",
+      "value": 1,
+      "description": "Habilitado por defecto segÃºn estructura BD"
+    }
+  ],
+  "sql_generation": {
+    "batch_size": 500,
+    "insert_mode": "multi_row",
+    "disable_foreign_key_checks": true,
+    "escape_identifiers": true,
+    "quote_char": "'"
+  }
+}
+
+
+

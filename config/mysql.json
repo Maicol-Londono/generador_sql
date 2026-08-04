@@ -1,0 +1,5 @@
+{
+  "engine": "mysql",
+  "dialect": "mysql",
+  "defaults": {}
+}

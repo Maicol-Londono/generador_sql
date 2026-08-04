@@ -1,0 +1,331 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "profile_name": "wellezy_solicitudes_import",
+    "description": "Importacion oficial de Solicitudes (BD Cartera) hacia Wellezy Hub 2",
+    "source_type": "excel"
+  },
+  "source": {
+    "type": "excel",
+    "sheet_name": "Solicitudes",
+    "header_row": 0,
+    "data_start_row": 1,
+    "ignore_empty_rows": true
+  },
+  "destination": {
+    "table_name": "solicitudes",
+    "engine": "mysql"
+  },
+  "import_strategy": {
+    "mode": "insert_ignore",
+    "conflict_keys": ["cedula", "cirugia", "fecha_cirugia"],
+    "duplicate_strategy_memory": "keep_first"
+  },
+  "error_policy": {
+    "mode": "continue",
+    "max_errors": 100
+  },
+  "integrity_policy": {
+    "on_lookup_errors": "abort"
+  },
+  "lookups": {
+    "lookup_client_id": {
+      "type": "database",
+      "target_table": "clients",
+      "search_columns": ["id"],
+      "return_column": "id",
+      "on_not_found": "null"
+    },
+    "lookup_company_id": {
+      "type": "database",
+      "target_table": "companies",
+      "search_columns": ["id"],
+      "return_column": "id",
+      "on_not_found": "error"
+    },
+    "lookup_linea_id": {
+      "type": "database",
+      "target_table": "lineas",
+      "search_columns": ["id"],
+      "return_column": "id",
+      "on_not_found": "null"
+    },
+    "lookup_clinica_id": {
+      "type": "database",
+      "target_table": "clinicas",
+      "search_columns": ["id"],
+      "return_column": "id",
+      "on_not_found": "null"
+    },
+    "lookup_responsable_id": {
+      "type": "database",
+      "target_table": "users",
+      "search_columns": ["id"],
+      "return_column": "id",
+      "on_not_found": "error"
+    }
+  },
+  "columns": [
+    {
+      "source_column": "Id",
+      "db_column": "id",
+      "type": "integer",
+      "nullable": false,
+      "skip": false
+    },
+    {
+      "source_column": "Id_cliente",
+      "db_column": "client_id",
+      "type": "integer",
+      "nullable": true,
+      "lookup": "lookup_client_id"
+    },
+    {
+      "source_column": "origin",
+      "db_column": "origin",
+      "type": "string",
+      "length": 30,
+      "nullable": false,
+      "default_value": "CRM",
+      "transformations": ["trim", "truncate(30)"]
+    },
+    {
+      "source_column": "company_id",
+      "db_column": "company_id",
+      "type": "integer",
+      "nullable": true,
+      "lookup": "lookup_company_id"
+    },
+    {
+      "source_column": "id_interno",
+      "db_column": "id_interno",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "estado_proceso",
+      "db_column": "estado_proceso",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "nombre",
+      "db_column": "nombre",
+      "type": "string",
+      "length": 255,
+      "nullable": false,
+      "transformations": ["trim", "titlecase"]
+    },
+    {
+      "source_column": "cedula",
+      "db_column": "cedula",
+      "type": "string",
+      "length": 255,
+      "nullable": false,
+      "transformations": ["trim", "remove_symbols"]
+    },
+    {
+      "source_column": "telefono",
+      "db_column": "telefono",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "correo",
+      "db_column": "correo",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim", "lowercase"],
+      "validators": ["is_valid_email"]
+    },
+    {
+      "source_column": "direccion",
+      "db_column": "direccion",
+      "type": "text",
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "tipo_contrato",
+      "db_column": "tipo_contrato",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "linea",
+      "db_column": "linea",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "linea_id",
+      "db_column": "linea_id",
+      "type": "integer",
+      "nullable": true,
+      "lookup": "lookup_linea_id"
+    },
+    {
+      "source_column": "cirugia",
+      "db_column": "cirugia",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "clinica_id",
+      "db_column": "clinica_id",
+      "type": "integer",
+      "nullable": true,
+      "lookup": "lookup_clinica_id"
+    },
+    {
+      "source_column": "clinica",
+      "db_column": "clinica",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "fecha_cirugia",
+      "db_column": "fecha_cirugia",
+      "type": "date",
+      "nullable": true,
+      "extraction": {
+        "date_format": ["YYYY-MM-DD", "YYYY-MM-DD HH:mm:ss", "DD/MM/YYYY"]
+      }
+    },
+    {
+      "source_column": "valor_cirugia",
+      "db_column": "valor_cirugia",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 2,
+      "nullable": false,
+      "default_value": 0.00,
+      "transformations": ["abs"]
+    },
+    {
+      "db_column": "responsable_id",
+      "type": "static_value",
+      "value": 17
+    },
+    {
+      "source_column": "valor_cotizacion",
+      "db_column": "valor_cotizacion",
+      "type": "decimal",
+      "precision": 15,
+      "scale": 2,
+      "nullable": true
+    },
+    {
+      "source_column": "valor_inicial",
+      "db_column": "valor_inicial",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 2,
+      "nullable": true
+    },
+    {
+      "source_column": "interes",
+      "db_column": "interes",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 4,
+      "nullable": false,
+      "default_value": 0.0000
+    },
+    {
+      "source_column": "seguro",
+      "db_column": "seguro",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 2,
+      "nullable": true
+    },
+    {
+      "source_column": "cuotas",
+      "db_column": "cuotas",
+      "type": "integer",
+      "nullable": true
+    },
+    {
+      "source_column": "cuota",
+      "db_column": "cuota",
+      "type": "decimal",
+      "precision": 15,
+      "scale": 2,
+      "nullable": true
+    },
+    {
+      "source_column": "fecha_primer_pago",
+      "db_column": "fecha_primer_pago",
+      "type": "date",
+      "nullable": true,
+      "extraction": {
+        "date_format": ["YYYY-MM-DD", "YYYY-MM-DD HH:mm:ss", "DD/MM/YYYY"]
+      }
+    },
+    {
+      "source_column": "dia_pago",
+      "db_column": "dia_pago",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim"]
+    },
+    {
+      "source_column": "estado",
+      "db_column": "estado",
+      "type": "string",
+      "length": 255,
+      "nullable": false,
+      "default_value": "BORRADOR",
+      "transformations": ["trim", "uppercase"]
+    },
+    {
+      "source_column": "status_operativo",
+      "db_column": "status_operativo",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "default_value": "pendiente",
+      "transformations": ["trim", "lowercase"]
+    },
+    {
+      "source_column": "asesora_nombre",
+      "db_column": "asesora_nombre",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim", "titlecase"]
+    },
+    {
+      "source_column": "linea_nombre",
+      "db_column": "linea_nombre",
+      "type": "string",
+      "length": 255,
+      "nullable": true,
+      "transformations": ["trim", "titlecase"]
+    }
+  ],
+  "sql_generation": {
+    "batch_size": 500,
+    "insert_mode": "multi_row",
+    "disable_foreign_key_checks": true,
+    "escape_identifiers": true,
+    "quote_char": "'"
+  }
+}

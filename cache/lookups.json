@@ -1,0 +1,20 @@
+﻿{
+    "companies": [
+        1
+    ],
+    "clinicas": [
+        1
+    ],
+    "lineas": [
+        1
+    ],
+    "clients": [],
+    "users": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+    ]
+}

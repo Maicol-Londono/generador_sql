@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "profile_name": "wellezy_finance_accounts_import",
+    "description": "Importacion oficial de Cuentas de Cartera hacia Wellezy Hub 2",
+    "source_type": "excel"
+  },
+  "source": {
+    "type": "excel",
+    "sheet_name": "finance_accounts",
+    "header_row": 0,
+    "data_start_row": 1,
+    "ignore_empty_rows": true
+  },
+  "timestamps": true,
+  "destination": {
+    "table_name": "finance_accounts",
+    "engine": "mysql"
+  },
+  "import_strategy": {
+    "mode": "insert",
+    "conflict_keys": [
+      "id"
+    ],
+    "duplicate_strategy_memory": "keep_first"
+  },
+  "error_policy": {
+    "mode": "continue",
+    "max_errors": 100
+  },
+  "columns": [
+    {
+      "source_column": "id",
+      "db_column": "id",
+      "type": "integer",
+      "nullable": false
+    },
+    {
+      "source_column": "accountable_type",
+      "db_column": "accountable_type",
+      "type": "string",
+      "nullable": false
+    },
+    {
+      "source_column": "accountable_id",
+      "db_column": "accountable_id",
+      "type": "integer",
+      "nullable": false
+    },
+    {
+      "source_column": "client_id",
+      "db_column": "client_id",
+      "type": "integer",
+      "nullable": false
+    },
+    {
+      "db_column": "collector_id",
+      "type": "static_value",
+      "value": 15
+    },
+    {
+      "source_column": "company_id",
+      "db_column": "company_id",
+      "type": "integer",
+      "nullable": false
+    },
+    {
+      "source_column": "linea_id",
+      "db_column": "linea_id",
+      "type": "integer",
+      "nullable": false
+    },
+    {
+      "source_column": "total_amount",
+      "db_column": "total_amount",
+      "type": "decimal",
+      "nullable": false
+    },
+    {
+      "source_column": "financed_amount",
+      "db_column": "financed_amount",
+      "type": "decimal",
+      "nullable": false
+    },
+    {
+      "source_column": "deposit_pact",
+      "db_column": "deposit_pact",
+      "type": "decimal",
+      "nullable": false
+    },
+    {
+      "source_column": "installments_limit",
+      "db_column": "installments_limit",
+      "type": "integer",
+      "nullable": false
+    },
+    {
+      "source_column": "status",
+      "db_column": "status",
+      "type": "string",
+      "nullable": false
+    },
+    {
+      "source_column": "observations",
+      "db_column": "observations",
+      "type": "string",
+      "nullable": true,
+      "normalizers": [
+        "nullable_fallback"
+      ]
+    }
+  ]
+}

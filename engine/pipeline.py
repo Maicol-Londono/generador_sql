@@ -18,6 +18,8 @@ Archivos SQL y Reportes
 
 from pathlib import Path
 import datetime
+import hashlib
+import json
 
 from engine.reader import ExcelReader
 from engine.profile_loader import ProfileLoader
@@ -86,7 +88,19 @@ class Pipeline:
                     registro["updated_at"] = current_time
                 db_columns.extend(["created_at", "updated_at"])
 
-            sql = SQLBuilder.insert(
+            generation_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            header = f"""-- =====================================================
+-- GENERADOR SQL
+-- =====================================================
+-- Archivo origen : {profile.sheet_name}
+-- Profile        : {profile.profile.get('metadata', dict()).get('profile_name', 'Desconocido')}
+-- Tabla destino  : {profile.table_name}
+-- Fecha generación : {generation_time}
+-- Registros : {len(registros)}
+-- =====================================================
+
+"""
+            sql = header + SQLBuilder.insert(
                 table=profile.table_name,
                 columns=db_columns,
                 rows=registros
@@ -96,11 +110,34 @@ class Pipeline:
 
             with open(output_file, "w", encoding="utf-8") as f:
                 f.write(sql)
+                
+            # Calcular MD5
+            with open(output_file, "rb") as f:
+                file_hash = hashlib.md5()
+                chunk = f.read(8192)
+                while chunk:
+                    file_hash.update(chunk)
+                    chunk = f.read(8192)
+            sql_md5 = file_hash.hexdigest()
+            
+            metadata_file = self.output_directory / "metadata.json"
+            metadata_data = {
+                "profile": profile.profile.get('metadata', dict()).get('profile_name', 'Desconocido'),
+                "table": profile.table_name,
+                "rows": len(registros),
+                "generated_at": generation_time,
+                "sql_file": output_file.name,
+                "md5": sql_md5
+            }
+            with open(metadata_file, "w", encoding="utf-8") as f:
+                json.dump(metadata_data, f, indent=4)
+        else:
+            sql_md5 = None
             
         print("Generando Reportes...")
         end_time = datetime.datetime.now()
         report_gen = ReportGenerator(error_manager)
-        report_gen.generate_all(profile, start_time, end_time, rows_read, len(registros))
+        report_gen.generate_all(profile, start_time, end_time, rows_read, len(registros), sql_md5)
         
         # Validacion estricta obligatoria
         filas_generadas = len(registros)

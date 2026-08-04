@@ -57,7 +57,7 @@ class ReportGenerator:
         } for n in report.normalizations]
         return self.write_csv("normalizations.csv", ["fila_excel", "columna", "valor_original", "valor_final", "motivo"], data)
 
-    def generate_summary(self, profile, start_time, end_time, rows_read, rows_inserted, report: Report):
+    def generate_summary(self, profile, start_time, end_time, rows_read, rows_inserted, report: Report, sql_md5: str = None):
         filepath = self.output_directory / "import_summary.txt"
         
         duration = end_time - start_time
@@ -100,6 +100,7 @@ Desglose de Normalizaciones:
 {normalizations_breakdown}
 
 SQL generado        : insert_{profile.table_name}.sql
+MD5                 : {sql_md5 if sql_md5 else 'N/A'}
 Reportes generados  : errors.csv, warnings.csv, normalizations.csv
 """
         with open(filepath, "w", encoding="utf-8") as f:
@@ -107,10 +108,10 @@ Reportes generados  : errors.csv, warnings.csv, normalizations.csv
             
         return filepath
 
-    def generate_all(self, profile, start_time, end_time, rows_read, rows_inserted):
+    def generate_all(self, profile, start_time, end_time, rows_read, rows_inserted, sql_md5=None):
         if not self.em: return
         report = self.em.get_report()
         self.generate_errors(report)
         self.generate_warnings(report)
         self.generate_normalizations(report)
-        self.generate_summary(profile, start_time, end_time, rows_read, rows_inserted, report)
+        self.generate_summary(profile, start_time, end_time, rows_read, rows_inserted, report, sql_md5)

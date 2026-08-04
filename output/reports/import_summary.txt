@@ -4,9 +4,9 @@ IMPORT SUMMARY
 Archivo origen      : Solicitudes
 Profile utilizado   : wellezy_solicitudes_import
 Tabla destino       : solicitudes
-Hora inicio         : 2026-08-04 12:24:53
-Hora fin            : 2026-08-04 12:24:55
-Tiempo total        : 0:00:01.798367
+Hora inicio         : 2026-08-04 15:47:36
+Hora fin            : 2026-08-04 15:47:40
+Tiempo total        : 0:00:03.817578
 
 Filas leídas        : 2072
 Filas procesadas    : 2072
@@ -48,4 +48,5 @@ default_value                 56
 remove_symbols                5
 
 SQL generado        : insert_solicitudes.sql
+MD5                 : 730f943c5bbf59b1330bafa71ab2433a
 Reportes generados  : errors.csv, warnings.csv, normalizations.csv

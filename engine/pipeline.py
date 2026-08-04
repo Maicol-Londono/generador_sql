@@ -25,7 +25,6 @@ from engine.mapper import Mapper
 from engine.sql_builder import SQLBuilder
 from engine.error_manager import ErrorManager
 from engine.report import ReportGenerator
-from engine.lookup_cache import LookupCache
 
 
 class Pipeline:
@@ -58,9 +57,6 @@ class Pipeline:
         print(f"Hoja Excel    : {profile.sheet_name}")
         print()
         
-        print("Cargando LookupCache...")
-        lookup_cache = LookupCache()
-        
         error_manager = ErrorManager(profile.error_policy)
 
         print("Leyendo Excel...")
@@ -75,23 +71,10 @@ class Pipeline:
         print(f"Registros encontrados: {rows_read}\n")
 
         print("Mapeando registros...")
-        mapper = Mapper(profile, error_manager, lookup_cache)
-        registros = mapper.map_rows(rows, start_index=profile.data_start_row + 2)
+        mapper = Mapper(profile, error_manager)
+        registros = mapper.map_rows(rows)
         print(f"Registros procesados: {len(registros)}\n")
         
-        # Validar integrity_policy
-        integrity_policy = profile.profile.get("integrity_policy", {"on_lookup_errors": "generate_sql"})
-        on_lookup_errors = integrity_policy.get("on_lookup_errors", "generate_sql")
-        total_lookup_errors = sum(f["errors"] for f in error_manager.lookup_failures.values())
-        
-        if total_lookup_errors > 0:
-            if on_lookup_errors == "abort":
-                raise RuntimeError(f"Generación abortada: Se encontraron {total_lookup_errors} errores de integridad referencial.")
-            elif on_lookup_errors == "threshold":
-                max_err = integrity_policy.get("max_lookup_errors", 0)
-                if total_lookup_errors > max_err:
-                    raise RuntimeError(f"Generación abortada: Errores de integridad ({total_lookup_errors}) superan el umbral ({max_err}).")
-
         if registros:
             print("Generando SQL...")
             

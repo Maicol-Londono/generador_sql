@@ -77,30 +77,6 @@ class ReportGenerator:
         if not normalizations_breakdown:
             normalizations_breakdown = "Ninguna"
             
-        # Auditoría de relaciones (FKs)
-        lookup_failures = getattr(report, "lookup_failures", {})
-        audit_lines = []
-        if lookup_failures:
-            audit_lines.append("\n========================================")
-            audit_lines.append("AUDITORÍA DE RELACIONES")
-            audit_lines.append("========================================")
-            for table, data in lookup_failures.items():
-                audit_lines.append(f"\n{table.capitalize()}")
-                audit_lines.append(f"Errores: {data['errors']}")
-                audit_lines.append("\nIDs inexistentes")
-                for missing_id in sorted(list(data["missing_ids"])):
-                    audit_lines.append(str(missing_id))
-                audit_lines.append("\nFilas afectadas")
-                for row_id in sorted(list(data["affected_rows"])):
-                    audit_lines.append(str(row_id))
-        else:
-            audit_lines.append("\n========================================")
-            audit_lines.append("AUDITORÍA DE RELACIONES")
-            audit_lines.append("========================================")
-            audit_lines.append("Sin errores de integridad referencial.")
-            
-        audit_breakdown = "\n".join(audit_lines)
-
         summary_template = f"""========================================
 IMPORT SUMMARY
 ========================================
@@ -122,7 +98,6 @@ Normalizaciones     : {len(report.normalizations)}
 
 Desglose de Normalizaciones:
 {normalizations_breakdown}
-{audit_breakdown}
 
 SQL generado        : insert_{profile.table_name}.sql
 Reportes generados  : errors.csv, warnings.csv, normalizations.csv

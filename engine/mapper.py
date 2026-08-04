@@ -12,10 +12,9 @@ from engine.validator import Validator
 
 class Mapper:
 
-    def __init__(self, profile, error_manager, lookup_cache=None):
+    def __init__(self, profile, error_manager):
         self.profile = profile
         self.error_manager = error_manager
-        self.lookup_cache = lookup_cache
         self.seen_slugs = set()
         self.seen_emails = set()
 
@@ -146,25 +145,6 @@ class Mapper:
                     valid_values_failed = True
                     value = None
             
-            # 6.5 Validar Lookups
-            lookup_name = config.get("lookup")
-            lookup_failed = False
-            lookup_target_table = None
-            lookup_on_not_found = None
-            if lookup_name and value is not None and self.lookup_cache:
-                lookup_config = self.profile.profile.get("lookups", {}).get(lookup_name)
-                if lookup_config:
-                    lookup_target_table = lookup_config.get("target_table")
-                    lookup_on_not_found = lookup_config.get("on_not_found", "error")
-                    if not self.lookup_cache.exists(lookup_target_table, value):
-                        if lookup_on_not_found == "error":
-                            lookup_failed = True
-                        elif lookup_on_not_found == "null":
-                            self.error_manager.report_warning(row_index, source_column, f"ID {value} no existe en {lookup_target_table}. Convertido a NULL.")
-                            value = None
-                        elif lookup_on_not_found == "default":
-                            pass # Será manejado por default_value fallback
-
             # 7. Aplicar default_value & 8. Aplicar nullable & 9. Reportar eventos al ErrorManager
             if value is None:
                 if default_value is not None:
@@ -195,10 +175,6 @@ class Mapper:
                     else:
                         self.error_manager.report_error(row_index, source_column, original_value, "NULL", "columna obligatoria sin valor", "Fila omitida")
             
-            if lookup_failed:
-                self.error_manager.report_lookup_error(row_index, source_column, lookup_target_table, original_value)
-                value = None
-
             registro[db_column] = value
             
         # Duplicated Slug Resolution

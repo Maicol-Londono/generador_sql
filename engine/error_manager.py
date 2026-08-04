@@ -44,7 +44,6 @@ class Report:
     warnings: List[WarningEvent]
     errors: List[ErrorEvent]
     skipped_rows: set
-    lookup_failures: dict
 
 
 class ErrorManager:
@@ -62,19 +61,6 @@ class ErrorManager:
         self.warning_count = 0
         self.normalization_count = 0
         self.skipped_rows = set()
-        
-        # Auditoría de relaciones
-        self.lookup_failures = {} # target_table -> {"errors": int, "missing_ids": set(), "affected_rows": set()}
-
-    def report_lookup_error(self, row_index, column, target_table, missing_id):
-        if target_table not in self.lookup_failures:
-            self.lookup_failures[target_table] = {"errors": 0, "missing_ids": set(), "affected_rows": set()}
-            
-        self.lookup_failures[target_table]["errors"] += 1
-        self.lookup_failures[target_table]["missing_ids"].add(missing_id)
-        self.lookup_failures[target_table]["affected_rows"].add(row_index)
-        
-        self.report_error(row_index, column, missing_id, "NULL", f"ID no existe en tabla {target_table} (lookup)", "Fila omitida")
 
     def report_error(self, row_index, column, original_value, final_value, description, action):
         self.error_count += 1
@@ -124,6 +110,5 @@ class ErrorManager:
             normalizations=self.normalizations,
             warnings=self.warnings,
             errors=self.errors,
-            skipped_rows=self.skipped_rows,
-            lookup_failures=self.lookup_failures
+            skipped_rows=self.skipped_rows
         )

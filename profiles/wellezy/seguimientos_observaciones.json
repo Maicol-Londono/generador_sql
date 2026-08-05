@@ -57,7 +57,7 @@
       "value": "nota"
     },
     {
-      "source_column": "Observación",
+      "source_column": "observacion",
       "db_column": "descripcion",
       "type": "string",
       "nullable": false

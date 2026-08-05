@@ -1,0 +1,76 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "profile_name": "wellezy_seguimientos_observaciones_import",
+    "description": "Importacion de observaciones historicas a seguimientos de Cartera",
+    "source_type": "excel"
+  },
+  "source": {
+    "type": "excel",
+    "sheet_name": "observaciones",
+    "header_row": 0,
+    "data_start_row": 1,
+    "ignore_empty_rows": true
+  },
+  "timestamps": true,
+  "destination": {
+    "table_name": "seguimientos",
+    "engine": "mysql"
+  },
+  "import_strategy": {
+    "mode": "insert",
+    "conflict_keys": [
+      "id"
+    ],
+    "duplicate_strategy_memory": "keep_first"
+  },
+  "error_policy": {
+    "mode": "continue",
+    "max_errors": 100
+  },
+  "columns": [
+    {
+      "source_column": "id",
+      "db_column": "id",
+      "type": "integer",
+      "nullable": false
+    },
+    {
+      "db_column": "tipo_entidad",
+      "type": "static_value",
+      "value": "App\\Models\\FinanceAccount"
+    },
+    {
+      "source_column": "id_solicitud",
+      "db_column": "entidad_id",
+      "type": "integer",
+      "nullable": false
+    },
+    {
+      "db_column": "usuario_id",
+      "type": "static_value",
+      "value": 17
+    },
+    {
+      "db_column": "tipo",
+      "type": "static_value",
+      "value": "nota"
+    },
+    {
+      "source_column": "Observación",
+      "db_column": "descripcion",
+      "type": "string",
+      "nullable": false
+    },
+    {
+      "db_column": "fecha",
+      "type": "static_value",
+      "value": "2026-08-05 12:00:00"
+    },
+    {
+      "db_column": "metadata",
+      "type": "static_value",
+      "value": "{\"modulo\":\"cartera\",\"tipo_gestion\":\"Otro\",\"resultado\":\"Contactado\"}"
+    }
+  ]
+}

@@ -19,8 +19,12 @@
   },
   "import_strategy": {
     "mode": "update",
-    "conflict_keys": ["id"],
-    "update_columns": ["status"]
+    "conflict_keys": [
+      "id"
+    ],
+    "update_columns": [
+      "status"
+    ]
   },
   "columns": [
     {
@@ -30,7 +34,7 @@
       "nullable": false
     },
     {
-      "source_column": "estado",
+      "source_column": "status",
       "db_column": "status",
       "type": "string",
       "nullable": false

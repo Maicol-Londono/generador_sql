@@ -22,20 +22,18 @@
     "conflict_keys": ["id"],
     "update_columns": ["status"]
   },
-  "mappings": {
-    "columns": [
-      {
-        "source_column": "id",
-        "db_column": "id",
-        "type": "integer",
-        "nullable": false
-      },
-      {
-        "source_column": "estado",
-        "db_column": "status",
-        "type": "string",
-        "nullable": false
-      }
-    ]
-  }
+  "columns": [
+    {
+      "source_column": "id",
+      "db_column": "id",
+      "type": "integer",
+      "nullable": false
+    },
+    {
+      "source_column": "estado",
+      "db_column": "status",
+      "type": "string",
+      "nullable": false
+    }
+  ]
 }

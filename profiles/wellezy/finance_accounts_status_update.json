@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "profile_name": "wellezy_finance_accounts_status_update",
+    "description": "Actualizacion masiva del campo status historico en Cuentas de Cartera",
+    "source_type": "excel"
+  },
+  "source": {
+    "type": "excel",
+    "sheet_name": "finance_accounts",
+    "header_row": 0,
+    "data_start_row": 1,
+    "ignore_empty_rows": true
+  },
+  "timestamps": false,
+  "destination": {
+    "table_name": "finance_accounts",
+    "engine": "mysql"
+  },
+  "import_strategy": {
+    "mode": "update",
+    "conflict_keys": ["id"],
+    "update_columns": ["status"]
+  },
+  "mappings": {
+    "columns": [
+      {
+        "source_column": "id",
+        "db_column": "id",
+        "type": "integer",
+        "nullable": false
+      },
+      {
+        "source_column": "estado",
+        "db_column": "status",
+        "type": "string",
+        "nullable": false
+      }
+    ]
+  }
+}

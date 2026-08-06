@@ -84,9 +84,13 @@ class Pipeline:
             if profile.profile.get("timestamps", False):
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 for registro in registros:
-                    registro["created_at"] = current_time
+                    if profile.insert_mode != "update":
+                        registro["created_at"] = current_time
                     registro["updated_at"] = current_time
-                db_columns.extend(["created_at", "updated_at"])
+                if profile.insert_mode != "update":
+                    db_columns.extend(["created_at", "updated_at"])
+                else:
+                    db_columns.append("updated_at")
 
             generation_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             header = f"""-- =====================================================
@@ -100,10 +104,22 @@ class Pipeline:
 -- =====================================================
 
 """
-            sql = header + SQLBuilder.insert(
+            # Extraer configuraciones de update
+            conflict_keys = profile.profile.get("import_strategy", {}).get("conflict_keys", [])
+            update_columns = profile.profile.get("import_strategy", {}).get("update_columns", None)
+            
+            # Si update_columns viene en el profile, le sumamos el updated_at si corresponde
+            if update_columns is not None and profile.profile.get("timestamps", False):
+                if "updated_at" not in update_columns:
+                    update_columns.append("updated_at")
+
+            sql = header + SQLBuilder.build(
+                mode=profile.insert_mode,
                 table=profile.table_name,
                 columns=db_columns,
-                rows=registros
+                rows=registros,
+                search_keys=conflict_keys,
+                update_columns=update_columns
             )
 
             output_file = self.output_directory / f"insert_{profile.table_name}.sql"

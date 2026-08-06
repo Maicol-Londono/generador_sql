@@ -19,7 +19,11 @@
   },
   "import_strategy": {
     "mode": "insert_ignore",
-    "conflict_keys": ["cedula", "cirugia", "fecha_cirugia"],
+    "conflict_keys": [
+      "cedula",
+      "cirugia",
+      "fecha_cirugia"
+    ],
     "duplicate_strategy_memory": "keep_first"
   },
   "error_policy": {
@@ -33,35 +37,45 @@
     "lookup_client_id": {
       "type": "database",
       "target_table": "clients",
-      "search_columns": ["id"],
+      "search_columns": [
+        "id"
+      ],
       "return_column": "id",
       "on_not_found": "null"
     },
     "lookup_company_id": {
       "type": "database",
       "target_table": "companies",
-      "search_columns": ["id"],
+      "search_columns": [
+        "id"
+      ],
       "return_column": "id",
       "on_not_found": "error"
     },
     "lookup_linea_id": {
       "type": "database",
       "target_table": "lineas",
-      "search_columns": ["id"],
+      "search_columns": [
+        "id"
+      ],
       "return_column": "id",
       "on_not_found": "null"
     },
     "lookup_clinica_id": {
       "type": "database",
       "target_table": "clinicas",
-      "search_columns": ["id"],
+      "search_columns": [
+        "id"
+      ],
       "return_column": "id",
       "on_not_found": "null"
     },
     "lookup_responsable_id": {
       "type": "database",
       "target_table": "users",
-      "search_columns": ["id"],
+      "search_columns": [
+        "id"
+      ],
       "return_column": "id",
       "on_not_found": "error"
     }
@@ -88,7 +102,10 @@
       "length": 30,
       "nullable": false,
       "default_value": "CRM",
-      "transformations": ["trim", "truncate(30)"]
+      "transformations": [
+        "trim",
+        "truncate(30)"
+      ]
     },
     {
       "source_column": "company_id",
@@ -103,7 +120,9 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim"]
+      "transformations": [
+        "trim"
+      ]
     },
     {
       "source_column": "estado_proceso",
@@ -111,7 +130,9 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim"]
+      "transformations": [
+        "trim"
+      ]
     },
     {
       "source_column": "nombre",
@@ -119,7 +140,10 @@
       "type": "string",
       "length": 255,
       "nullable": false,
-      "transformations": ["trim", "titlecase"]
+      "transformations": [
+        "trim",
+        "titlecase"
+      ]
     },
     {
       "source_column": "cedula",
@@ -127,7 +151,10 @@
       "type": "string",
       "length": 255,
       "nullable": false,
-      "transformations": ["trim", "remove_symbols"]
+      "transformations": [
+        "trim",
+        "remove_symbols"
+      ]
     },
     {
       "source_column": "telefono",
@@ -135,7 +162,9 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim"]
+      "transformations": [
+        "trim"
+      ]
     },
     {
       "source_column": "correo",
@@ -143,15 +172,22 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim", "lowercase"],
-      "validators": ["is_valid_email"]
+      "transformations": [
+        "trim",
+        "lowercase"
+      ],
+      "validators": [
+        "is_valid_email"
+      ]
     },
     {
       "source_column": "direccion",
       "db_column": "direccion",
       "type": "text",
       "nullable": true,
-      "transformations": ["trim"]
+      "transformations": [
+        "trim"
+      ]
     },
     {
       "source_column": "tipo_contrato",
@@ -159,7 +195,9 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim"]
+      "transformations": [
+        "trim"
+      ]
     },
     {
       "source_column": "linea",
@@ -167,7 +205,9 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim"]
+      "transformations": [
+        "trim"
+      ]
     },
     {
       "source_column": "linea_id",
@@ -182,7 +222,9 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim"]
+      "transformations": [
+        "trim"
+      ]
     },
     {
       "source_column": "clinica_id",
@@ -197,7 +239,9 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim"]
+      "transformations": [
+        "trim"
+      ]
     },
     {
       "source_column": "fecha_cirugia",
@@ -205,7 +249,11 @@
       "type": "date",
       "nullable": true,
       "extraction": {
-        "date_format": ["YYYY-MM-DD", "YYYY-MM-DD HH:mm:ss", "DD/MM/YYYY"]
+        "date_format": [
+          "YYYY-MM-DD",
+          "YYYY-MM-DD HH:mm:ss",
+          "DD/MM/YYYY"
+        ]
       }
     },
     {
@@ -216,7 +264,9 @@
       "scale": 2,
       "nullable": false,
       "default_value": 0.00,
-      "transformations": ["abs"]
+      "transformations": [
+        "abs"
+      ]
     },
     {
       "db_column": "responsable_id",
@@ -276,7 +326,11 @@
       "type": "date",
       "nullable": true,
       "extraction": {
-        "date_format": ["YYYY-MM-DD", "YYYY-MM-DD HH:mm:ss", "DD/MM/YYYY"]
+        "date_format": [
+          "YYYY-MM-DD",
+          "YYYY-MM-DD HH:mm:ss",
+          "DD/MM/YYYY"
+        ]
       }
     },
     {
@@ -285,16 +339,21 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim"]
+      "transformations": [
+        "trim"
+      ]
     },
     {
-      "source_column": "estado",
-      "db_column": "estado",
+      "source_column": "status",
+      "db_column": "status",
       "type": "string",
       "length": 255,
       "nullable": false,
       "default_value": "BORRADOR",
-      "transformations": ["trim", "uppercase"]
+      "transformations": [
+        "trim",
+        "uppercase"
+      ]
     },
     {
       "source_column": "status_operativo",
@@ -303,7 +362,10 @@
       "length": 255,
       "nullable": true,
       "default_value": "pendiente",
-      "transformations": ["trim", "lowercase"]
+      "transformations": [
+        "trim",
+        "lowercase"
+      ]
     },
     {
       "source_column": "asesora_nombre",
@@ -311,7 +373,10 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim", "titlecase"]
+      "transformations": [
+        "trim",
+        "titlecase"
+      ]
     },
     {
       "source_column": "linea_nombre",
@@ -319,7 +384,10 @@
       "type": "string",
       "length": 255,
       "nullable": true,
-      "transformations": ["trim", "titlecase"]
+      "transformations": [
+        "trim",
+        "titlecase"
+      ]
     }
   ],
   "sql_generation": {

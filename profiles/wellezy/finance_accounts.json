@@ -95,7 +95,7 @@
       "nullable": false
     },
     {
-      "source_column": "estado",
+      "source_column": "status",
       "db_column": "status",
       "type": "string",
       "nullable": false
